@@ -2,8 +2,10 @@ import BookEvent from "@/app/components/BookEvent";
 import EventCard from "@/app/components/EventCard";
 import { IEvent } from "@/database";
 import { getSimilarEventBySlug } from "@/lib/actions/event.actions";
+import { cacheLife } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
 function EventDetailItem({
@@ -57,6 +59,7 @@ export default async function EventDetailsPage({
   const request = await fetch(`${BASE_URL}/api/events/${slug}`);
   const {
     event: {
+      _id,
       description,
       image,
       overview,
@@ -129,7 +132,7 @@ export default async function EventDetailsPage({
             ) : (
               <p className="text-sm">Be the first to book your spot! </p>
             )}
-            <BookEvent />
+            <BookEvent eventId={_id} slug={slug} />
           </div>
         </aside>
       </div>
